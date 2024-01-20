@@ -1,6 +1,6 @@
 # TOEFL practice
 
-The open-source TOEFL practice website
+TOEFL practice website
 
 ![](https://shields.io/badge/dependencies-Python_3.11-blue)
 

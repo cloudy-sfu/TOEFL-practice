@@ -1,0 +1,1 @@
+javascript:(function(){const divElements=document.querySelectorAll('div[id^="ztpo"]');let articleLinks=[];divElements.forEach(e=>{let t=e.querySelectorAll('a[href*="/toefl/read/"]:not([href*="preview"]):not([href*="play"])');t.forEach(e=>{articleLinks.includes(e.getAttribute("href"))||articleLinks.push(e.getAttribute("href"))})}),console.log(articleLinks);})();
