@@ -54,20 +54,20 @@ class ListeningAnswerSheet(forms.Form):
 
 @login_required(login_url='/login')
 def answer_listening(req):
-    passage_id = req.POST.get('passage')
+    lecture_id = req.POST.get('lecture')
     try:
-        passage = Lecture.objects.get(id=passage_id)
+        lecture = Lecture.objects.get(id=lecture_id)
     except (ObjectDoesNotExist, TypeError):
         return redirect('/?message=The program lost track of which passage you are '
                         'working on.')
     ras = ListeningAnswerSheet(req.POST)
-    ras.load_questions(passage)
+    ras.load_questions(lecture)
     if not ras.is_valid():
-        return redirect('/?message=The POST data of answers is invalid.')
+        return redirect(f'/?message=The POST data of answers is invalid. {ras.errors}')
     for qid_str, letters in ras.cleaned_data.items():
         if qid_str.isdigit() and letters:
             try:
-                question = ListeningQuestion.objects.get(passage=passage, idx=int(qid_str))
+                question = ListeningQuestion.objects.get(lecture=lecture, idx=int(qid_str))
             except ObjectDoesNotExist:
                 continue
             answer = ''.join(sorted(letters))

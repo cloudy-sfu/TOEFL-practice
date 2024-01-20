@@ -152,3 +152,4 @@ cython_debug/
 .idea/
 django_key
 storage
+allowed_hosts

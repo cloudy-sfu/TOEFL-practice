@@ -26,7 +26,8 @@ with open("django_key") as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+with open("allowed_hosts") as f:
+    ALLOWED_HOSTS = f.readlines()
 
 
 # Application definition

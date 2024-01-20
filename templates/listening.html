@@ -10,7 +10,7 @@
     </head>
     <body class="container-fluid">
         <div class="row ps-3 justify-content-center">
-            <div class="col-6 p-2">
+            <div class="col-6 p-2" style="height: 100vh; overflow-y: auto;">
                 <p class="text-center"><b>{{ passage.title }}</b></p>
                 {% if show_answers %}
                     <audio src="{{ passage.recording.url }}" controls style="width: 100%;"></audio>
@@ -31,13 +31,13 @@
                     <audio src="{{ passage.recording.url }}" id="recording"></audio>
                 {% endif %}
             </div>
-            <div class="col-6 p-2">
+            <div class="col-6 p-2" style="height: 100vh; overflow-y: auto;">
                 <div class="nav justify-content-end">
                     <a class="nav-link" href="/">Back</a>
                 </div>
                 <form class="form" action="/add_answer_listening" method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="passage" value="{{ passage.id }}" />
+                    <input type="hidden" name="lecture" value="{{ passage.id }}" />
 
                     {% for question in questions %}
                     <p>
