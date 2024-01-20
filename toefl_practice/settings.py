@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,15 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open("django_key") as f:
-    SECRET_KEY = f.read()
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-with open("allowed_hosts") as f:
-    ALLOWED_HOSTS = f.readlines()
-
+with open("security.json") as f:
+    security = json.load(f)
+SECRET_KEY = security.get("secret_key", "")
+ALLOWED_HOSTS = security.get("allowed_hosts", [])
+CSRF_TRUSTED_ORIGINS = security.get("csrf_trusted_origins", [])
+DEBUG = False
 
 # Application definition
 

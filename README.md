@@ -6,20 +6,31 @@ TOEFL practice website
 
 ## Usage
 
-1. Visit https://djecrety.ir/ and generate a Django key.
+Create an empty file `security.json` at the program root directory. The example file is
 
-2. Create a text file `django_key` and write the Django key to this file. Do not add a new line at the end.
+```json
+{
+  "secret_key": "xq4%ni8h!)((25sh(yvys-8ec=ns71$&r91-w52vgg_r$j6u58",
+  "allowed_hosts": [
+    "example.com",
+    "localhost"
+  ],
+  "csrf_trusted_origins": ["https://example.com"]
+}
+```
 
-3. Create a text file `allowed_hosts` and write allowed host names. Each name is one line, and do not add a new line at the end.
+"secret_key": Visit https://djecrety.ir/ and generate a Django key.
 
-4. Download a released database to the program root directory, and unzip.
+"csrf_trusted_origins": It must contain the schema (usually "http" or "https").
 
-5. Run the following command.
-   ```
-   pip install -r requirements.txt
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
+Download a released database, unzip it, and move it to the program root directory.
+
+Run the following command.
+```
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+```
 
 Start the service:
 

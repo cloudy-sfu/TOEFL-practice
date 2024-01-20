@@ -15,8 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls.static import static
+from django.views.static import serve
 from django.conf import settings
 import practice.views as v1
 import my_admin.views as v2
@@ -35,6 +36,7 @@ urlpatterns = [
     path('add_answer_reading', v3.answer_reading),
 
     path('view_listening', v4.view_lecture),
-    path('add_answer_listening', v4.answer_listening)
+    path('add_answer_listening', v4.answer_listening),
+
+    re_path(r'^storage/(?P<path>.*)$', serve, dict(document_root=settings.MEDIA_ROOT)),
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
