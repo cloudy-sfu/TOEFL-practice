@@ -12,7 +12,7 @@
         <div class="row ps-3">
             <div class="col-6 p-2" style="height: 100vh; overflow-y: auto;">
                 <p class="text-center"><b>{{ passage.title }}</b></p>
-                {{ passage.article | safe }}
+                <div id="article_text">{{ passage.article | safe }}</div>
                 <div style="height: 10vh;"></div>
             </div>
             <div class="col-6 p-2" style="height: 100vh; overflow-y: auto;">
@@ -24,7 +24,7 @@
                     <input type="hidden" name="passage" value="{{ passage.id }}" />
                     {% for question in questions %}
                     <div class="alert">
-                        <p><b>{{ question.idx }}.</b> {{ question.question }}</p>
+                        <p><b>{{ question.idx }}.</b> {{ question.question_paragraph_href | safe }}</p>
                         {% if question.citation %}
                         <div class="alert border-dark">{{ question.citation | safe }}</div>
                         {% endif %} {% if question.has_multiple_answer %} {% if question.choice_a %}
@@ -142,5 +142,56 @@
                 </form>
             </div>
         </div>
+
+    <script>
+        let article_text = document.getElementById("article_text");
+        let paragraphs = [];
+        function format_paragraphs() {
+            let paraText = '';
+            article_text.childNodes.forEach(function (node) {
+                if (node.nodeName === '#text' || node.nodeName === 'SPAN' || node.nodeName === 'A') {
+                    // Text nodes or <span>/<a> tags, concatenate text
+                    paraText += node.outerHTML || node.textContent;
+                } else if (node.nodeName === 'BR') {
+                    if (paraText.trim() !== '') {
+                        paragraphs.push(paraText);
+                        paraText = '';
+                    } else {
+                        paragraphs[-1] += '<br>'
+                    }
+                } else if (node.nodeName === 'P') {
+                    // <p> tag, treat as a paragraph
+                    if (node.textContent.trim() !== '') {
+                        // Ignore empty <p></p>
+                        paragraphs.push(node.outerHTML);
+                    }
+                }
+            });
+            // Check for any remaining paragraph text after the loop
+            if (paraText.trim() !== '') {
+                paragraphs.push(paraText);
+            }
+            // Ensure paragraphs is an array
+            if (!Array.isArray(paragraphs)) {
+                return;
+            }
+            article_text.innerHTML = '';
+            for (let i = 0; i < paragraphs.length; i++) {
+                article_text.innerHTML += `<p id="p${i+1}"><b>[P${i+1}] </b>${paragraphs[i]}</p>`;
+            }
+        }
+        format_paragraphs();
+        function highlight_paragraph(p) {
+            article_text.innerHTML = '';
+            for (let i = 0; i < paragraphs.length; i++) {
+                if (i === p-1) {
+                    article_text.innerHTML += `<p id="p${i+1}">▶ <b>[P${i+1}] </b>${paragraphs[i]}</p>`;
+                } else {
+                    article_text.innerHTML += `<p id="p${i+1}"><b>[P${i+1}] </b>${paragraphs[i]}</p>`;
+                }
+            }
+        }
+    </script>
+
     </body>
 </html>

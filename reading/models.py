@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
@@ -14,6 +16,9 @@ class Passage(models.Model):
     @property
     def n_questions(self):
         return self.readingquestion_set.count()
+
+
+paragraph = re.compile(r"paragraph (\d+)", re.IGNORECASE)
 
 
 class ReadingQuestion(models.Model):
@@ -35,6 +40,20 @@ class ReadingQuestion(models.Model):
     @property
     def has_multiple_answer(self):
         return len(self.answer) > 1
+
+    @property
+    def question_paragraph_href(self):
+        question_text = []
+        all_paragraph_symbol = paragraph.finditer(self.question)
+        p = 0  # pointer
+        for symbol in all_paragraph_symbol:
+            question_text.append(self.question[p:symbol.start()])
+            question_text.append(f"<a href=\"#p{symbol.group(1)}\" onclick=\""
+                                 f"highlight_paragraph({symbol.group(1)})\">"
+                                 f"{self.question[symbol.start():symbol.end()]}</a>")
+            p = symbol.end()
+        question_text.append(self.question[p:])
+        return ''.join(question_text)
 
 
 class ReadingAnswer(models.Model):
